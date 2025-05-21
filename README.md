@@ -7,8 +7,7 @@
     - starts the server
 
 ## next steps
- - set up logging per job
- - set up views to dynamically update with new jobs
+ - set up views to dynamically update with new job logs
  - set up view to see details of job
 
 ## eventually

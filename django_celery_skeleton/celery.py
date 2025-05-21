@@ -1,6 +1,8 @@
 import os
+import sys
 import json
 import time
+
 from celery import Celery
 from celery.schedules import crontab
 
@@ -27,9 +29,7 @@ def setup_periodic_tasks(sender: Celery, **kwargs):
 
 ###
 def validate_dir(dir):
-	if os.path.isdir(dir):
-		print(f"DEBUG {dir} ... already exists")
-	else:
+	if not os.path.isdir(dir):
 		print(f"INFO {dir} ... creating")
 		os.mkdir(dir)
 
@@ -38,6 +38,10 @@ def validate_dir(dir):
 		return False
 	else:
 		return True
+#
+def generate_log_file(taskname, contents):
+	with open(f"{settings.SKELETON_LOGS}/{taskname}-{int(time.time())}.json", "w") as outfile:
+		json.dump(contents, outfile, ensure_ascii=False)
 
 ###
 
@@ -50,8 +54,5 @@ def test(arg):
 @app.task
 def verify_workspace():
 	validate_dir(settings.SKELETON_WORKSPACE)
-
-@app.task
-def generate_file(taskname, contents):
-	with open(f"{taskname}-{time.time()}.json", "w") as outfile:
-		outfile.write(contents)
+	validate_dir(settings.SKELETON_LOGS)
+	generate_log_file("verify_workspace", {"result": "pass"})

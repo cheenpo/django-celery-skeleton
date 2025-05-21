@@ -129,3 +129,4 @@ SKELETON_RESULT_BACKEND = "redis://localhost:6379"
 
 # other
 SKELETON_WORKSPACE = "/tmp/skeleton"
+SKELETON_LOGS = f"{SKELETON_WORKSPACE}/logs"
