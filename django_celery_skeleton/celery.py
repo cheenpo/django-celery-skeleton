@@ -55,4 +55,4 @@ def test(arg):
 def verify_workspace():
 	validate_dir(settings.SKELETON_WORKSPACE)
 	validate_dir(settings.SKELETON_LOGS)
-	generate_log_file("verify_workspace", {"result": "pass"})
+	generate_log_file("verify_workspace", {"status": "complete"})
