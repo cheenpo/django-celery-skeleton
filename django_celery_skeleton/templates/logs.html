@@ -1,0 +1,7 @@
+<h2>status: {{status}}</h2>
+<h2>files</h2>
+<ol>
+{% for log in logs %}
+<li>{{log.filename}}</li>
+{% endfor %}
+</ol>
