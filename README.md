@@ -10,3 +10,6 @@
  - set up logging per job
  - set up views to dynamically update with new jobs
  - set up view to see details of job
+
+## eventually
+ - wrap it all up in docker-compose

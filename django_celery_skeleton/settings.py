@@ -124,5 +124,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Celery settings
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+SKELETON_BROKER_URL = "redis://localhost:6379"
+SKELETON_RESULT_BACKEND = "redis://localhost:6379"
+
+# other
+SKELETON_WORKSPACE = "/tmp/skeleton"
