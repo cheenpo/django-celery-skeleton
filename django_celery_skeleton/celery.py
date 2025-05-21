@@ -25,13 +25,31 @@ def setup_periodic_tasks(sender: Celery, **kwargs):
 	#	test.s('Happy Mondays!'),
 	#)
 
+###
+def validate_dir(dir):
+	if os.path.isdir(dir):
+		print(f"DEBUG {dir} ... already exists")
+	else:
+		print(f"INFO {dir} ... creating")
+		os.mkdir(dir)
+
+	if not os.path.isdir(dir):
+		print(f"ERROR {dir} ... should exist")
+		return False
+	else:
+		return True
+
+###
+
+
+
 @app.task
 def test(arg):
 	print(arg)
 
 @app.task
 def verify_workspace():
-	print(f"todo: verify/create {settings.SKELETON_WORKSPACE}")
+	validate_dir(settings.SKELETON_WORKSPACE)
 
 @app.task
 def generate_file(taskname, contents):
