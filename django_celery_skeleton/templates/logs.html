@@ -1,3 +1,7 @@
+{% extends "skeleton.html" %}
+
+
+{% block content %}
 <h2>status: {{status}}</h2>
 <h2>files</h2>
 <ol>
@@ -5,3 +9,4 @@
 <li>{{log.filename}}</li>
 {% endfor %}
 </ol>
+{% endblock content %}
