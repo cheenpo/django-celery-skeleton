@@ -1,12 +1,25 @@
 {% extends "skeleton.html" %}
 
-
 {% block content %}
-<h2>status: {{status}}</h2>
-<h2>files</h2>
-<ol>
-{% for log in logs %}
-<li>{{log.filename}}</li>
-{% endfor %}
-</ol>
+<p>files ({{status}})</p>
+<div class="container">
+	<table class="table table-sm table-hover">
+		<thead>
+			<tr>
+				<th>task</th>
+				<th>filename</th>
+				<th>date</th>
+			</tr>
+		</thead>
+		<tbody class="table-striped table-group-divider">
+			{% for log in logs %}
+			<tr>
+				<td class="font-monospace text-dark-emphasis">{{log.taskname}}</td>
+				<td class="font-monospace text-dark-emphasis">{{log.filename}}</td>
+				<td class="font-monospace text-dark-emphasis">{{log.epoch}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
 {% endblock content %}
