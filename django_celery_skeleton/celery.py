@@ -40,9 +40,10 @@ def validate_dir(dir):
 		return True
 #
 def generate_log_file(taskname, contents):
-	with open(f"{settings.SKELETON_LOGS}/{taskname}-{int(time.time())}.json", "w") as outfile:
+	filename = f"{settings.SKELETON_LOGS}/{taskname}-{int(time.time())}.json"
+	with open(filename, "w") as outfile:
 		json.dump(contents, outfile, ensure_ascii=False)
-
+	print(f"{filename} ... created")
 ###
 
 

@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django_celery_skeleton import views
+from django_celery_skeleton.views import ShowLogs
     
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', ShowLogs.as_view(), name='logs'),
 ]
