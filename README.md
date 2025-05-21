@@ -5,3 +5,8 @@
     - starts the actual worker
  - `poetry run python manage.py runserver`
     - starts the server
+
+## next steps
+ - set up logging per job
+ - set up views to dynamically update with new jobs
+ - set up view to see details of job
