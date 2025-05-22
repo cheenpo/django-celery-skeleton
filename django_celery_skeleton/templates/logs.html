@@ -1,7 +1,11 @@
 {% extends "skeleton.html" %}
 
 {% block logs %}
-<p>files ({{status}})</p>
+{% if status != "success" %}
+<div class="alert alert-danger" role="alert">
+	<center>something borked with getting the logs</center>
+</div>
+{% else %}
 <div class="container">
 	<table class="table table-sm table-hover">
 		<thead>
@@ -22,4 +26,5 @@
 		</tbody>
 	</table>
 </div>
+{% endif %}
 {% endblock logs %}
