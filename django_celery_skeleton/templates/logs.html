@@ -1,6 +1,6 @@
 {% extends "skeleton.html" %}
 
-{% block logs %}
+{% block content %}
 {% if status != "success" %}
 <div class="alert alert-danger" role="alert">
 	<center>something borked with getting the logs</center>
@@ -12,7 +12,7 @@
 			<tr>
 				<th>task</th>
 				<th>filename</th>
-				<th>date</th>
+				<th>when</th>
 			</tr>
 		</thead>
 		<tbody class="table-striped table-group-divider">
@@ -20,11 +20,11 @@
 			<tr style="cursor: pointer;">
 				<td class="font-monospace text-dark-emphasis">{{log.taskname}}</td>
 				<td class="font-monospace text-dark-emphasis">{{log.filename}}</td>
-				<td class="font-monospace text-dark-emphasis">{{log.epoch}}</td>
+				<td class="font-monospace text-dark-emphasis">{{log.time_since}}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
 </div>
 {% endif %}
-{% endblock logs %}
+{% endblock content %}
