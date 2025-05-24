@@ -20,8 +20,9 @@ from . import views
     
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.show_logs, name='logs'),
-    path('jobs/', views.show_logs, name='logs'),
-    path('jobs/<str:taskname>', views.show_logs, name='logs'),
-    #path('jobs/<str:taskname>/<int:epoch>', ShowLogs.as_view(), name='logs'),
+    path('', views.show_jobs, name='jobs'),
+    path('job/', views.show_job, name='job'),
+    path('job/<str:job>', views.show_job, name='job'),
+    path('jobs/', views.show_jobs, name='jobs'),
+    path('jobs/<str:taskname>', views.show_jobs, name='jobs'),
 ]

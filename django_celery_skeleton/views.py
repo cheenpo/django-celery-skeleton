@@ -1,5 +1,6 @@
 import os
 import time
+import json
 from datetime import datetime, timedelta
 
 from django.conf import settings
@@ -27,19 +28,49 @@ def seconds_in_pretty_time(seconds):
 ##
 
 
-def show_logs(request, taskname=None):
-    print(taskname)
-    #request.GET.get("q", None)
-    logs = []
+def show_jobs(request, taskname=None):
+    data = {"status": "in progress"}
+    jobs = []
     logfiles = os.listdir(settings.SKELETON_LOGS)
     for logfile in logfiles:
         if taskname and taskname not in logfile:
             continue
         logfile_s = logfile.split("-")
         seconds_since = int(time.time()) - int(logfile_s[1].replace(".json", ""))
-        logs.append({"filename": logfile, "taskname": logfile_s[0], "time_since": seconds_in_pretty_time(seconds_since)})
-    data = {"status": "success", "logs": logs}
+        base_uri = f"{request.scheme}://{request.get_host()}"
+        detail_uri = f"{base_uri}/job/{str(logfile).replace(".json", "")}"
+        jobs.append({"filename": str(logfile), "taskname": logfile_s[0], "uri": detail_uri, "time_since": seconds_in_pretty_time(seconds_since)})
+    data["status"] = "success"
+    data["jobs"] = jobs
+    data["taskname"] = taskname
+    data["jobs_uri"] = f"{base_uri}/jobs"
     #return JsonResponse(data)
 
-    HTML_STRING = render_to_string("logs.html", context=data)
+    HTML_STRING = render_to_string("jobs.html", context=data)
+    return HttpResponse(HTML_STRING)
+
+#
+def show_job(request, job=None):
+    data = {"status": "in progress", "job": job}
+    logfile = f"{settings.SKELETON_LOGS}/{job}.json"
+    base_uri = f"{request.scheme}://{request.get_host()}"
+    #
+    logfile_s = job.split("-")
+    seconds_since = int(time.time()) - int(logfile_s[1])
+    data["taskname"] = logfile_s[0]
+    data["job_time_since"] = seconds_in_pretty_time(seconds_since)
+    job_data = {}
+    try:
+        with open(logfile, 'r') as file:
+            data["job_data"] = json.dumps(json.load(file), indent=4)
+            data["status"] = "success"
+    except FileNotFoundError:
+        data["status"] = "failed"
+        data["fail_message"] = "job not found"
+    except json.JSONDecodeError:
+        data["status"] = "failed"
+        data["fail_message"] = "Invalid JSON format"
+    #
+    data["jobs_uri"] = f"{base_uri}/jobs"
+    HTML_STRING = render_to_string("job.html", context=data)
     return HttpResponse(HTML_STRING)

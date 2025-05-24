@@ -1,0 +1,26 @@
+{% extends "skeleton.html" %}
+
+{% block content %}
+<div class="container">
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{{ jobs_uri }}">jobs</a></li>
+			<li class="breadcrumb-item active" aria-current="page">{{ job }}</li>
+		</ol>
+	</nav>
+
+{% if status == "failed" %}
+<div class="alert alert-danger" role="alert">
+	<center>{{ fail_message }}</center>
+</div>
+{% elif status != "success" %}
+<div class="alert alert-warning" role="alert">
+	<center>unknown status: {{ status }}</center>
+</div>
+{% else %}
+<div class="container">
+	<pre>{{ job_data }}</pre>
+</div>
+{% endif %}
+</div>
+{% endblock content %}
