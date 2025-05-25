@@ -35,14 +35,20 @@ def show_jobs(request, job=None):
     base_uri = f"{request.scheme}://{request.get_host()}"
     jobs = []
     data["job_data"] = ""
+    padding_top_counter = 0
+    padding_top_counter_stop = False
     logfiles = os.listdir(settings.SKELETON_LOGS)
     for logfile in logfiles:
         match = False
+        if not padding_top_counter_stop:
+            padding_top_counter += 1
         if job and job in logfile:
             match = True
+            padding_top_counter_stop = True
             try:
                 with open(f"{settings.SKELETON_LOGS}/{logfile}", 'r') as file:
                     data["job_data"] += json.dumps(json.load(file), indent=4)
+                    data["job_data"] += "\n"
             except FileNotFoundError:
                 data["job_data"] += "<div class='alert alert-warning' role='alert'>job not found</div>"
             except json.JSONDecodeError:
@@ -53,10 +59,11 @@ def show_jobs(request, job=None):
         detail_uri = f"{base_uri}/jobs/{str(logfile).replace(".json", "")}"
         if job == '':
             match = False
-        jobs.append({"filename": str(logfile), "job": logfile_s[0], "match": match, "uri": detail_uri, "time_since": seconds_in_pretty_time(seconds_since)})
+        jobs.append({"job": logfile_s[0], "match": match, "uri": detail_uri, "time_since": seconds_in_pretty_time(seconds_since)})
     data["jobs"] = jobs
     data["job"] = job
     data["jobs_uri"] = f"{base_uri}/jobs/all"
+    data["padding_top"] = 33 * padding_top_counter
     data["status"] = "success"
     #return JsonResponse(data)
 
@@ -64,27 +71,3 @@ def show_jobs(request, job=None):
     return HttpResponse(HTML_STRING)
 
 #
-def show_job(request, job=None):
-    data = {"status": "in progress", "job": job}
-    logfile = f"{settings.SKELETON_LOGS}/{job}.json"
-    base_uri = f"{request.scheme}://{request.get_host()}"
-    #
-    logfile_s = job.split("-")
-    seconds_since = int(time.time()) - int(logfile_s[1])
-    data["job"] = logfile_s[0]
-    data["job_time_since"] = seconds_in_pretty_time(seconds_since)
-    job_data = {}
-    try:
-        with open(logfile, 'r') as file:
-            data["job_data"] = json.dumps(json.load(file), indent=4)
-            data["status"] = "success"
-    except FileNotFoundError:
-        data["status"] = "failed"
-        data["fail_message"] = "job not found"
-    except json.JSONDecodeError:
-        data["status"] = "failed"
-        data["fail_message"] = "Invalid JSON format"
-    #
-    data["jobs_uri"] = f"{base_uri}/jobs"
-    HTML_STRING = render_to_string("job.html", context=data)
-    return HttpResponse(HTML_STRING)

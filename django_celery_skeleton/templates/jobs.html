@@ -22,34 +22,34 @@
 	<center>ruh roh: {{ status }}</center>
 </div>
 {% else %}
-	<div id="d_job_data">
+	<div id="d_job_table" style="width: 49%; float: left;">
+		<table class="table table-sm table-hover">
+			<thead>
+				<tr>
+					<th>task</th>
+					<th>when</th>
+				</tr>
+			</thead>
+			<tbody class="table-striped table-group-divider">
+				{% for job in jobs %}
+				<tr style="cursor: pointer;" onclick="window.location.href='{{ job.uri }}'">
+					<td class="font-monospace text-dark-emphasis">
+						{% if job.match %}
+						-> 
+						{% endif %}
+						{{job.job}}
+					</td>
+					<td class="font-monospace text-dark-emphasis">{{job.time_since}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div id="d_job_data" style="width: 49%; display: inline-block; padding-top: {{padding_top}}px; padding-left: 25px;">
 	{% if job_data %}
 		<pre>{{job_data}}</pre>
 	{% endif %}
 	</div>
-	<table class="table table-sm table-hover">
-		<thead>
-			<tr>
-				<th>task</th>
-				<th>filename</th>
-				<th>when</th>
-			</tr>
-		</thead>
-		<tbody class="table-striped table-group-divider">
-			{% for job in jobs %}
-			<tr style="cursor: pointer;" onclick="window.location.href='{{ job.uri }}'">
-				<td class="font-monospace text-dark-emphasis">
-					{% if job.match %}
-					-> 
-					{% endif %}
-					{{job.job}}
-				</td>
-				<td class="font-monospace text-dark-emphasis">{{job.filename}}</td>
-				<td class="font-monospace text-dark-emphasis">{{job.time_since}}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
 </div>
 {% endif %}
 {% endblock content %}
