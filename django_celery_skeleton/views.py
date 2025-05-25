@@ -1,4 +1,5 @@
 import os
+import glob
 import time
 import json
 from datetime import datetime, timedelta
@@ -37,8 +38,10 @@ def show_jobs(request, job=None):
     data["job_data"] = ""
     padding_top_counter = 0
     padding_top_counter_stop = False
-    logfiles = os.listdir(settings.SKELETON_LOGS)
-    for logfile in logfiles:
+    logfiles = list(filter(os.path.isfile, glob.glob(settings.SKELETON_LOGS + "/*")))
+    logfiles.sort(key=os.path.getctime, reverse=True)
+    for full_path_logfile in logfiles:
+        logfile = full_path_logfile.split("/")[-1]
         match = False
         if not padding_top_counter_stop:
             padding_top_counter += 1
