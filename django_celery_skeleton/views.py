@@ -28,22 +28,36 @@ def seconds_in_pretty_time(seconds):
 ##
 
 
-def show_jobs(request, taskname=None):
+def show_jobs(request, job=None):
     data = {"status": "in progress"}
+    if job == 'all':
+        job = ''
+    base_uri = f"{request.scheme}://{request.get_host()}"
     jobs = []
+    data["job_data"] = ""
     logfiles = os.listdir(settings.SKELETON_LOGS)
     for logfile in logfiles:
-        if taskname and taskname not in logfile:
-            continue
+        match = False
+        if job and job in logfile:
+            match = True
+            try:
+                with open(f"{settings.SKELETON_LOGS}/{logfile}", 'r') as file:
+                    data["job_data"] += json.dumps(json.load(file), indent=4)
+            except FileNotFoundError:
+                data["job_data"] += "<div class='alert alert-warning' role='alert'>job not found</div>"
+            except json.JSONDecodeError:
+                data["job_data"] += "<div class='alert alert-danger' role='alert'>invalid JSON format</div>"
+        #
         logfile_s = logfile.split("-")
         seconds_since = int(time.time()) - int(logfile_s[1].replace(".json", ""))
-        base_uri = f"{request.scheme}://{request.get_host()}"
-        detail_uri = f"{base_uri}/job/{str(logfile).replace(".json", "")}"
-        jobs.append({"filename": str(logfile), "taskname": logfile_s[0], "uri": detail_uri, "time_since": seconds_in_pretty_time(seconds_since)})
-    data["status"] = "success"
+        detail_uri = f"{base_uri}/jobs/{str(logfile).replace(".json", "")}"
+        if job == '':
+            match = False
+        jobs.append({"filename": str(logfile), "job": logfile_s[0], "match": match, "uri": detail_uri, "time_since": seconds_in_pretty_time(seconds_since)})
     data["jobs"] = jobs
-    data["taskname"] = taskname
-    data["jobs_uri"] = f"{base_uri}/jobs"
+    data["job"] = job
+    data["jobs_uri"] = f"{base_uri}/jobs/all"
+    data["status"] = "success"
     #return JsonResponse(data)
 
     HTML_STRING = render_to_string("jobs.html", context=data)
@@ -57,7 +71,7 @@ def show_job(request, job=None):
     #
     logfile_s = job.split("-")
     seconds_since = int(time.time()) - int(logfile_s[1])
-    data["taskname"] = logfile_s[0]
+    data["job"] = logfile_s[0]
     data["job_time_since"] = seconds_in_pretty_time(seconds_since)
     job_data = {}
     try:

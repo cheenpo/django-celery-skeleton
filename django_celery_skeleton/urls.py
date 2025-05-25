@@ -21,8 +21,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.show_jobs, name='jobs'),
-    path('job/', views.show_job, name='job'),
-    path('job/<str:job>', views.show_job, name='job'),
     path('jobs/', views.show_jobs, name='jobs'),
-    path('jobs/<str:taskname>', views.show_jobs, name='jobs'),
+    path('jobs/<str:job>', views.show_jobs, name='jobs'),
 ]

@@ -1,22 +1,32 @@
 {% extends "skeleton.html" %}
 
 {% block content %}
-{% if status != "success" %}
-<div class="alert alert-danger" role="alert">
-	<center>something borked with getting the jobs</center>
-</div>
-{% else %}
 <div class="container">
 	<nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
-			{% if taskname %}
+			{% if job %}
 				<li class="breadcrumb-item"><a href="{{ jobs_uri }}">jobs</a></li>
-				<li class="breadcrumb-item active" aria-current="page">{{ taskname }}</li>
+				<li class="breadcrumb-item active" aria-current="page">{{ job }}</li>
 			{% else %}
 				<li class="breadcrumb-item active" aria-current="page"><a href="{{ jobs_uri }}">jobs</a></li>
 			{% endif %}
 		</ol>
 	</nav>
+
+{% if status == "failed" %}
+<div class="alert alert-danger" role="alert">
+	<center>{{ fail_message }}</center>
+</div>
+{% elif status != "success" %}
+<div class="alert alert-warning" role="alert">
+	<center>ruh roh: {{ status }}</center>
+</div>
+{% else %}
+	<div id="d_job_data">
+	{% if job_data %}
+		<pre>{{job_data}}</pre>
+	{% endif %}
+	</div>
 	<table class="table table-sm table-hover">
 		<thead>
 			<tr>
@@ -28,7 +38,12 @@
 		<tbody class="table-striped table-group-divider">
 			{% for job in jobs %}
 			<tr style="cursor: pointer;" onclick="window.location.href='{{ job.uri }}'">
-				<td class="font-monospace text-dark-emphasis">{{job.taskname}}</td>
+				<td class="font-monospace text-dark-emphasis">
+					{% if job.match %}
+					-> 
+					{% endif %}
+					{{job.job}}
+				</td>
 				<td class="font-monospace text-dark-emphasis">{{job.filename}}</td>
 				<td class="font-monospace text-dark-emphasis">{{job.time_since}}</td>
 			</tr>
