@@ -55,7 +55,7 @@ def delete_expired_files(dir, expiration_days):
 		file_time = os.stat(file_full_path).st_mtime
 		if(file_time < current_time - day*expiration_days):
 			files_deleted.append(f"deleting ... {file_full_path}")
-			#todo os.remove(file_full_path)
+			os.remove(file_full_path)
 	return files_deleted
 ###
 
@@ -70,7 +70,7 @@ def verify_workspace():
 	results = {}
 	results["validate_workspace"] = validate_dir(settings.SKELETON_WORKSPACE)
 	results["validate_workspace_logs"] = validate_dir(settings.SKELETON_LOGS)
-	results["delete_workspace_logs"] = delete_expired_files(settings.SKELETON_LOGS, settings.SKELETON_LOGS_EXPIRE_DAYS)
+	results["delete_expired_workspace_logs"] = delete_expired_files(settings.SKELETON_LOGS, settings.SKELETON_LOGS_EXPIRE_DAYS)
 	generate_log_file("verify_workspace", {"status": "success", "results": results})
 
 

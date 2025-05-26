@@ -8,8 +8,4 @@
 
 ## next steps
  - set up view to dynamically update with new job logs
- - set up view to show details of job log
- - update job logging to have a dynamic status, not just at the end
-
-## eventually
- - wrap it all up in docker-compose
+ - docker-compose
