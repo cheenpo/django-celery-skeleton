@@ -45,6 +45,18 @@ def generate_log_file(taskname, contents):
 	with open(filename, "w") as outfile:
 		json.dump(contents, outfile, ensure_ascii=False)
 	print(f"{filename} ... created")
+#
+def delete_expired_files(dir, expiration_days):
+	current_time = time.time()
+	files_deleted = []
+	day = 86400 # seconds in a day
+	for file in os.listdir(dir):
+		file_full_path = f"{dir}/{file}"
+		file_time = os.stat(file_full_path).st_mtime
+		if(file_time < current_time - day*expiration_days):
+			files_deleted.append(f"deleting ... {file_full_path}")
+			#todo os.remove(file_full_path)
+	return files_deleted
 ###
 
 
@@ -58,6 +70,7 @@ def verify_workspace():
 	results = {}
 	results["validate_workspace"] = validate_dir(settings.SKELETON_WORKSPACE)
 	results["validate_workspace_logs"] = validate_dir(settings.SKELETON_LOGS)
+	results["delete_workspace_logs"] = delete_expired_files(settings.SKELETON_LOGS, settings.SKELETON_LOGS_EXPIRE_DAYS)
 	generate_log_file("verify_workspace", {"status": "success", "results": results})
 
 
