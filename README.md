@@ -7,5 +7,7 @@
     - starts the server
 
 ## next steps
- - set up view to dynamically update with new job logs
  - docker-compose
+
+## nice to have
+ - set up view to dynamically update with new job logs

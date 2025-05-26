@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:latest
+  web:
+    build: .
+    command: poetry run python manage.py runserver
+    #command: top
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
