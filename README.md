@@ -1,3 +1,6 @@
+## description
+simple skeleton application that can run jobs in the background and view results in a django app
+
 ## helpful commands
  - `make` or `poetry install`
     - installs things
