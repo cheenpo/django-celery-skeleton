@@ -59,7 +59,7 @@ def show_jobs(request, job=None):
         #
         logfile_s = logfile.split("-")
         seconds_since = int(time.time()) - int(logfile_s[1].replace(".json", ""))
-        detail_uri = f"{base_uri}/jobs/{str(logfile).replace(".json", "")}"
+        detail_uri = f"{base_uri}/jobs/{str(logfile).replace('.json', '')}"
         if job == '':
             match = False
         jobs.append({"job": logfile_s[0], "match": match, "uri": detail_uri, "time_since": seconds_in_pretty_time(seconds_since)})
